@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
+      //这个配置只做联想和提示用，真正的路径转换是在vite.config.js里配置的alias
     }
   },
   "exclude": ["node_modules", "dist"]
