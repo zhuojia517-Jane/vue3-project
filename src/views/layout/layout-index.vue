@@ -2,13 +2,13 @@
 import LayoutNav from './components/layoutNav.vue'
 import LayoutHeader from './components/layoutHeader.vue'
 import LayoutFooter from './components/layoutFooter.vue'
+import LayoutFixed from './components/layoutFixed.vue'
+
 </script>
 <template>
-  <div>我是首页
-    <!-- 二级路由出口处 -->
-    <LayoutNav />
-    <LayoutHeader />
-    <RouterView />
-    <LayoutFooter />
-  </div>
+  <LayoutFixed />
+  <LayoutNav />
+  <LayoutHeader />
+  <RouterView />
+  <LayoutFooter />
 </template>
