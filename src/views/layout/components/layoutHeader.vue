@@ -35,6 +35,7 @@ const categoryStore = useCategoryStore()
   .container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   .logo {
@@ -50,7 +51,7 @@ const categoryStore = useCategoryStore()
   }
 
   .app-header-nav {
-    width: 820px;
+    flex: 1;
     display: flex;
     padding-left: 40px;
     position: relative;

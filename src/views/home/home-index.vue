@@ -1,3 +1,17 @@
+<script setup>
+import HomeCategory from './components/homeCategory.vue'
+import HomeBanner from './components/homeBanner.vue'
+import HomeNew from './components/homeNew.vue'
+import HomeHot from './components/homeHot.vue'
+import HomeProduct from './components/homeProduct.vue'
+</script>
+
 <template>
-  <div height="1200px">我是主页</div>
+  <div class="container">
+    <HomeCategory />
+    <HomeBanner />
+  </div>
+  <HomeNew />
+  <HomeHot />
+  <HomeProduct />
 </template>
