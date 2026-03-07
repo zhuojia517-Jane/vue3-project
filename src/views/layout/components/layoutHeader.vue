@@ -1,8 +1,6 @@
 <script setup>
-
-import { useCategoryStore } from '@/stores/category';
-
-const categoryStore = useCategoryStore()
+import LayoutHeaderUl from './LayoutHeaderUl.vue'
+import HeaderCart from './HeaderCart.vue'
 </script>
 
 <template>
@@ -11,18 +9,14 @@ const categoryStore = useCategoryStore()
       <h1 class="logo">
         <RouterLink to="/">小兔鲜</RouterLink>
       </h1>
-      <ul class="app-header-nav">
-        <li class="home" v-for="item in categoryStore.categoryList" :key="item.id">
 
-          <RouterLink to="/">{{ item.name }}</RouterLink>
-        </li>
-      </ul>
+      <LayoutHeaderUl />
       <div class="search">
         <i class="iconfont icon-search"></i>
         <input type="text" placeholder="搜一搜">
       </div>
       <!-- 头部购物车 -->
-
+      <HeaderCart />
     </div>
   </header>
 </template>
@@ -35,7 +29,6 @@ const categoryStore = useCategoryStore()
   .container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
   }
 
   .logo {
@@ -50,36 +43,6 @@ const categoryStore = useCategoryStore()
     }
   }
 
-  .app-header-nav {
-    flex: 1;
-    display: flex;
-    padding-left: 40px;
-    position: relative;
-    z-index: 998;
-
-    li {
-      margin-right: 40px;
-      width: 38px;
-      text-align: center;
-
-      a {
-        font-size: 16px;
-        line-height: 32px;
-        height: 32px;
-        display: inline-block;
-
-        &:hover {
-          color: $xtxColor;
-          border-bottom: 1px solid $xtxColor;
-        }
-      }
-
-      .active {
-        color: $xtxColor;
-        border-bottom: 1px solid $xtxColor;
-      }
-    }
-  }
 
   .search {
     width: 170px;
