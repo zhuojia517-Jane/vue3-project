@@ -16,6 +16,7 @@ import HomePanel from './components/homePanel.vue'
   <HomeNew />
   <HomeHot />
   <HomeProduct />
+  //可以在index里面进行测试
   <HomePanel title="新鲜好物" subTitle="新鲜好物 好多商品">
     <slot>我是新鲜好物的插槽内容</slot>
   </HomePanel>
