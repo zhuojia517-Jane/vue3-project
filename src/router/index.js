@@ -5,6 +5,8 @@ import login from "@/views/login/login-index.vue";
 import layout from "@/views/layout/layout-index.vue";
 import home from "@/views/home/home-index.vue";
 import category from "@/views/category/category-index.vue";
+import subCategory from "@/views/subCategory/sub-index.vue";
+// 注意路径@后面要有/
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,6 +21,10 @@ const router = createRouter({
         {
           path: "category/:id",
           component: category,
+        },
+        {
+          path: "category/sub/:id",
+          component: subCategory,
         },
       ],
     },
