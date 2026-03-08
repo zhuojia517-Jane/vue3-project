@@ -40,4 +40,33 @@
     }
   }
 }
+
+.goods-item {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.goods-item:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.goods-item img {
+  width: 100%;
+  height: 120px;
+  /* 统一图片高度 */
+  object-fit: contain;
+  /* 保持图片比例 */
+  margin-bottom: 8px;
+}
+
+.goods-item p {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

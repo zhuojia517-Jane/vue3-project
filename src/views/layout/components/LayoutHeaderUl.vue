@@ -11,12 +11,12 @@ const categoryStore = useCategoryStore()
     </li>
 
     <li class="home" v-for="item in categoryStore.categoryList" :key="item.id">
-      <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+      <RouterLink active-class="active" :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
     </li>
   </ul>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .app-header-nav {
   width: 820px;
   display: flex;

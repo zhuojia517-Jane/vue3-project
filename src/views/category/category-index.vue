@@ -3,6 +3,7 @@ import { getCategoryAPI } from "@/apis/category";//注意具名导入
 import { onUpdated, ref, onMounted } from "vue";
 import { useRoute } from "vue-router"; //获取路由参数
 import { getBannerApi } from '@/apis/home'
+import GoodsItem from '../home/components/GoodsItems.vue'
 const categoryData = ref({})
 const route = useRoute()
 const getCategory = async () => {
@@ -41,6 +42,25 @@ onMounted(() => getBanner())
           </el-carousel-item>
         </el-carousel>
       </div>
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryData.children" :key="i.id">
+            <RouterLink to="/">
+              <img :src="i.picture" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodsItem v-for="good in item.goods" :good="good" :key="good.id" />
+        </div>
+      </div>
     </div>
     <div class="sub-container">
       <el-tabs>
@@ -58,71 +78,94 @@ onMounted(() => getBanner())
 
 
 
-<style lang="scss" scoped>
-.bread-container {
-  padding: 25px 0;
-  color: #666;
-}
-
-.sub-container {
-  padding: 20px 10px;
-  background-color: #fff;
-
-  .body {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0 10px;
-  }
-
-  .goods-item {
-    display: block;
-    width: 220px;
-    margin-right: 20px;
-    padding: 20px 30px;
+<style scoped lang="scss">
+.top-category {
+  h3 {
+    font-size: 28px;
+    color: #666;
+    font-weight: normal;
     text-align: center;
-
-    img {
-      width: 160px;
-      height: 160px;
-    }
-
-    p {
-      padding-top: 10px;
-    }
-
-    .name {
-      font-size: 16px;
-    }
-
-    .desc {
-      color: #999;
-      height: 29px;
-    }
-
-    .price {
-      color: $priceColor;
-      font-size: 20px;
-    }
+    line-height: 100px;
   }
 
-  .pagination-container {
+  .sub-list {
     margin-top: 20px;
-    display: flex;
-    justify-content: center;
+    background-color: #fff;
+
+    ul {
+      display: flex;
+      padding: 0 32px;
+      flex-wrap: wrap;
+
+      li {
+        width: 168px;
+        height: 160px;
+
+
+        a {
+          text-align: center;
+          display: block;
+          font-size: 16px;
+
+          img {
+            width: 100px;
+            height: 100px;
+          }
+
+          p {
+            line-height: 40px;
+          }
+
+          &:hover {
+            color: $xtxColor;
+          }
+        }
+      }
+    }
   }
 
+  .ref-goods {
+    background-color: #fff;
+    margin-top: 20px;
+    position: relative;
 
+    .head {
+      .xtx-more {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      .tag {
+        text-align: center;
+        color: #999;
+        font-size: 20px;
+        position: relative;
+        top: -20px;
+      }
+    }
+
+    .body {
+      display: flex;
+      justify-content: space-around;
+      padding: 0 40px 30px;
+    }
+  }
+
+  .bread-container {
+    padding: 25px 0;
+  }
 }
 
 .home-banner {
-  max-width: 1240px;
-  width: 100%;
+  width: 1240px;
+  height: 500px;
   margin: 0 auto;
+
 
   img {
     width: 100%;
-    height: auto;
-    object-fit: cover;
+    height: 500px;
   }
 }
 </style>
