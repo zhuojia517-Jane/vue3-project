@@ -1,20 +1,19 @@
-import { ref, onMounted } from 'vue'
+import {ref,onMounted} from 'vue'
 import { getBannerApi } from '@/apis/home'
+
 
 export function useBanner() {
   const bannerList = ref([])
-  const getBanner = async () => {
-    try {
-      const res = await getBannerApi()
-      bannerList.value = res.result || []
-    } catch (e) {
-      console.error('useBanner error', e)
-    }
+
+const getBanner = async () => {
+  const res = await getBannerApi({ distributionSite: '2' })
+  console.log(res)
+  bannerList.value = res.result
+}
+
+  onMounted(() => getBanner())
+  
+  return {
+    bannerList
   }
-
-  onMounted(() => {
-    getBanner()
-  })
-
-  return { bannerList }
 }

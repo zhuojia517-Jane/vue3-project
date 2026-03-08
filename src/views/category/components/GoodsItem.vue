@@ -9,7 +9,13 @@
 </template>
 
 <script setup>
-
+// 必须加这行！接收父组件传来的 goods 数据
+defineProps({
+  goods: {
+    type: Object,
+    default: () => ({})
+  }
+})
 </script>
 
 <style scoped lang="scss">
