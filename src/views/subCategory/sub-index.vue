@@ -26,6 +26,21 @@ const getGoodList = async () => {
   console.log('商品列表数据:', res.result)
   goodList.value = res.result.items || []
 }
+//切换tab的回调函数
+const tabchange=()=>{
+  console.log('tabchange',reqData.value.sortField)
+  reqData.value.page = 1
+  getGoodList()
+}
+//无限加载
+const disabled=ref(false)
+const load=async()=>{
+  console.log('load')
+  reqData.value.page++
+  const res =await getSubCategoryAPI(reqData.value)
+  goodList.value=[...goodList.value,...res.result.items]
+  if(res.result.items.length===0) disabled.value=true
+}
 
 onMounted(() => {
   getCategoryFilter()
@@ -44,13 +59,13 @@ onMounted(() => {
         <el-breadcrumb-item>{{ filterData.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="sub-container">
-      <el-tabs>
+    <div class="sub-container" >
+      <el-tabs v-model="reqData.sortField" @tab-change="tabchange">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
+      <div class="body" @end-reached="load">
         <GoodsItem v-for="goods in goodList" :goods="goods" :key="goods.id"></GoodsItem>
       </div>
     </div>
