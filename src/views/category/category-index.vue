@@ -1,7 +1,8 @@
 <script setup>
 import { getCategoryAPI } from "@/apis/category";//注意具名导入
-import { onUpdated, ref } from "vue";
+import { onUpdated, ref, onMounted } from "vue";
 import { useRoute } from "vue-router"; //获取路由参数
+import { getBannerApi } from '@/apis/home'
 const categoryData = ref({})
 const route = useRoute()
 const getCategory = async () => {
@@ -11,6 +12,15 @@ const getCategory = async () => {
 onUpdated(() => {
   getCategory()
 })
+const bannerList = ref([])
+
+const getBanner = async () => {
+  const res = await getBannerApi({ distributionSite: '2' })
+  console.log(res)
+  bannerList.value = res.result
+}
+
+onMounted(() => getBanner())
 </script>
 
 <template>
@@ -22,6 +32,15 @@ onUpdated(() => {
         <el-breadcrumb-item>{{ categoryData.name }}
         </el-breadcrumb-item>
       </el-breadcrumb>
+    </div>
+    <div>
+      <div class="home-banner">
+        <el-carousel height="500px">
+          <el-carousel-item v-for="item in bannerList" :key="item.id">
+            <img :src="item.imgUrl" alt="">
+          </el-carousel-item>
+        </el-carousel>
+      </div>
     </div>
     <div class="sub-container">
       <el-tabs>
@@ -93,5 +112,17 @@ onUpdated(() => {
   }
 
 
+}
+
+.home-banner {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
 }
 </style>
