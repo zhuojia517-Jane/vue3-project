@@ -1,18 +1,24 @@
 <script setup>
 import { getCategoryAPI } from "@/apis/category";//注意具名导入
-import { onUpdated, ref, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router"; //获取路由参数
 import { getBannerApi } from '@/apis/home'
 import GoodsItem from '../home/components/GoodsItems.vue'
+import { onBeforeRouteUpdate } from "vue-router";
 const categoryData = ref({})
 const route = useRoute()
-const getCategory = async () => {
-  const res = await getCategoryAPI(route.params.id)
+//提供了默认参数
+const getCategory = async (id = route.params.id) => {
+  const res = await getCategoryAPI(id)
   categoryData.value = res.result
 }
-onUpdated(() => {
-  getCategory()
+onMounted(() => getCategory()
+)
+//使用最新的路由参数来请求数据
+onBeforeRouteUpdate((to) => {
+  getCategory(to.params.id)
 })
+
 const bannerList = ref([])
 
 const getBanner = async () => {

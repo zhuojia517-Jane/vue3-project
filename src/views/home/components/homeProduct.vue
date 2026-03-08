@@ -3,6 +3,7 @@ import HomePanel from './homePanel.vue'
 import { getGoodsAPI } from '@/apis/home'
 import { onMounted, ref } from 'vue'
 import GoodsItems from './GoodsItems.vue'
+// 组建模块化，子组件GoodsItems.vue通过defineprops让父组件接收数据，渲染
 const goodsProduct = ref([])
 const getCate = async () => {
   const res = await getGoodsAPI()

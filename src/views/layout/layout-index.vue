@@ -20,7 +20,7 @@ onMounted(() => categoryStore.getCategory())
   <LayoutNav />
   <LayoutHeader />
   <!-- 添加key 破坏复用机制 强制销毁重建 -->
-  <!-- <RouterView :key="$route.fullPath" /> -->
+  <!-- <RouterView :key="$route.fullPath" /> -->//解决路由缓存方法一
   <RouterView />
   <LayoutFooter />
 </template>

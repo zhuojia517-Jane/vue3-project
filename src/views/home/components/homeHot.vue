@@ -11,7 +11,7 @@ const getHotList = async () => {
 onMounted(() => {
   getHotList()
 })
-
+//首先在api里面写接口函数，然后导入到组件里面，最后在onMounted调用接口函数获取数据并赋值给hotList，最后在模板里面使用v-for循环渲染数据
 </script>
 
 <template>
