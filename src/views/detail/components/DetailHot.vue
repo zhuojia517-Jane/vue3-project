@@ -20,7 +20,7 @@ const route=useRoute()
 const getHotGoods=async ()=>{
     const res =await getHotGoodsAPI({
         id:route.params.id,
-        type:1
+        type:props.type
     })
     hotGoods.value=res.result
 }
