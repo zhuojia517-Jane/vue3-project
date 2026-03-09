@@ -51,7 +51,7 @@ const { bannerList } = useBanner()
         </div>
       </div>
     </div>
-    <div class="sub-container">
+    <div class="sub-container" >
       <el-tabs>
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
