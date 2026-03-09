@@ -1,11 +1,18 @@
 <script setup>
 import { ref } from 'vue'
+const formRef=ref(null)
+const doLogin=()=>{
+  formRef.value.validate((valid)=>{
+console.log(valid)
 
+  })
+}
 const form=ref({
   account: '',
   password: '',
   agree:true
 })
+//1.账号密码规则简单校验
 const rules={
   account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -15,6 +22,7 @@ const rules={
     {required:true,message:'请输入密码',trigger:'blur'},
     { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
   ],
+  //2.同意条款 规则采用自定义验证
   agree:[
     {
       validator(rule,value,callback){
@@ -49,7 +57,7 @@ const rules={
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form :model="form" :rules="rules" label-position="right" label-width="60px"
+            <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px"
               status-icon>
               <el-form-item prop="account" label="账户">
                 <el-input v-model="form.account"/>
@@ -57,12 +65,12 @@ const rules={
               <el-form-item prop="password" label="密码">
                 <el-input v-model="form.password"/>
               </el-form-item>
-              <el-form-item prop="agree"label-width="22px">
+              <el-form-item prop="agree" label-width="22px">
                 <el-checkbox  size="large" v-model="form.agree">
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
             </el-form>
           </div>
         </div>
