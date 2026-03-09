@@ -1,4 +1,5 @@
 <script setup>
+import DetailHot from '@/views/detail/components/DetailHot.vue'
 import { getDetailAPI } from '@/apis/detail'
 import {ref,onMounted} from 'vue'
 import {useRoute} from 'vue-router'
@@ -42,23 +43,23 @@ onMounted(()=>{
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
-                  <p>{{Good.saleCount}}</p>
-                  <p> 100+ </p>
+                  <p>销售人气</p>
+                  <p> {{Good.saleCount}}</p>
                   <p><i class="iconfont icon-task-filling"></i>销量人气</p>
                 </li>
                 <li>
+                  <p>评价人数</p>
                   <p>{{Good.commentCount}}</p>
-                  <p>200+</p>
                   <p><i class="iconfont icon-comment-filling"></i>查看评价</p>
                 </li>
                 <li>
+                  <p>收藏人数</p>
                   <p>{{ Good.collectCount }}</p>
-                  <p>300+</p>
                   <p><i class="iconfont icon-favorite-filling"></i>收藏商品</p>
                 </li>
                 <li>
-                  <p>{{ Good.brand.name }}</p> 
-                  <p>400+</p>
+                  <p>品牌信息</p> 
+                  <p>{{ Good.brand.name }}</p>
                   <p><i class="iconfont icon-dynamic-filling"></i>品牌主页</p>
                 </li>
               </ul>
@@ -121,7 +122,8 @@ onMounted(()=>{
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
-
+              <DetailHot type="1"/>
+              <DetailHot type="2" />
             </div>
           </div>
         </div>
