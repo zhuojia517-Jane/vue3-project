@@ -1,6 +1,7 @@
 <script setup>
 import DetailHot from '@/views/detail/components/DetailHot.vue'
 import imageView from '@/components/imageView/index.vue'
+import XtxSku from '@/components/XtxSku/index.vue'
 import { getDetailAPI } from '@/apis/detail'
 import {ref,onMounted} from 'vue'
 import {useRoute} from 'vue-router'
@@ -13,6 +14,9 @@ const getGood=async()=>{
 onMounted(()=>{
     getGood()
 })
+const sku=(sku)=>{
+    console.log(sku)
+}
 
 </script>
 
@@ -31,7 +35,7 @@ onMounted(()=>{
           </el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: `/category/sub/${Good.categories[0].id}` }">{{Good.categories[0].name}}
           </el-breadcrumb-item>
-          <el-breadcrumb-item>抓绒保暖，毛毛虫子儿童运动鞋</el-breadcrumb-item>
+          <el-breadcrumb-item>{{Good.name}}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
@@ -89,7 +93,7 @@ onMounted(()=>{
                 </dl>
               </div>
               <!-- sku组件 -->
-
+              <XtxSku :goods="Good" @change="sku"/>
               <!-- 数据组件 -->
 
               <!-- 按钮组件 -->
