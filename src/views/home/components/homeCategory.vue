@@ -35,7 +35,7 @@ const categoryStore = useCategoryStore()
 
 <style scoped lang='scss'>
 .home-category {
-  width: 250px;
+  width: 300px;
   height: 500px;
   background: rgba(0, 0, 0, 0.8);
   position: relative;
@@ -65,8 +65,8 @@ const categoryStore = useCategoryStore()
         height: 500px;
         background: rgba(255, 255, 255, 0.8);
         position: absolute;
-        left: 250px;
-        top: 0;
+        left: 300px;
+        top: -25px;
         display: none;
         padding: 0 15px;
 
