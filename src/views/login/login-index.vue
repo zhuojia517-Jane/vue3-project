@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue'
+import {loginAPI} from '@/apis/user.js'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+import { useRouter } from 'vue-router' 
+//useRouter 可以调用方法 useRoute可以获取参数
 const formRef=ref(null)
-const doLogin=()=>{
-  formRef.value.validate((valid)=>{
-console.log(valid)
-
-  })
-}
+const router=useRouter() 
 const form=ref({
   account: '',
   password: '',
@@ -16,11 +16,11 @@ const form=ref({
 const rules={
   account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+   
   ],
   password:[
     {required:true,message:'请输入密码',trigger:'blur'},
-    { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
+    { min: 6, max: 10, message: '长度在 6 到 24 个字符', trigger: 'blur' }
   ],
   //2.同意条款 规则采用自定义验证
   agree:[
@@ -32,6 +32,21 @@ const rules={
       }
     }
   ]
+}
+
+const doLogin=()=>{
+  const {account,password}=form.value
+  formRef.value.validate( async (valid)=>{
+const res=await loginAPI({account,password})
+console.log(res)
+  })
+  if(valid)
+{
+    //提示用户
+ElMessage({type:'sucess',message:'登录成功'})
+  //跳转首页
+router.replace({path:'/'})
+}
 }
 </script>
 
