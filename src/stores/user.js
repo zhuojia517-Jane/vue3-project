@@ -14,8 +14,6 @@ export const useUserStore = defineStore('userStore', () => {
         userInfo.value = {}
     }
     return { userInfo, getUserInfo, clearUserInfo }
-
-
 },
     // 持久化配置，存进localstorage ，用的是pinia -Plugin -persistedstate
     { persist: true }

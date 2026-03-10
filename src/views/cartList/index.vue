@@ -11,7 +11,7 @@ const cartStore=useCartStore()
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox/>
+                <el-checkbox />
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
@@ -24,7 +24,7 @@ const cartStore=useCartStore()
           <tbody>
             <tr v-for="i in cartStore.cartList" :key="i.id">
               <td>
-                <el-checkbox />
+                <el-checkbox :model-value="i.selected" @change="(selected)=>cartStore.singleCheck(i.skuId,selected)"/>
               </td>
               <td>
                 <div class="goods">
@@ -55,7 +55,7 @@ const cartStore=useCartStore()
                 </p>
               </td>
             </tr>
-            <tr v-if="cartStore.length === 0">
+            <tr v-if="cartStore.cartList.length === 0">
               <td colspan="6">
                 <div class="cart-none">
                   <el-empty description="购物车列表为空">

@@ -20,12 +20,19 @@ export const useCartStore = defineStore('cartStore', () => {
     //计算属性 结算个数和金额
     const allCount = computed(() => { return cartList.value.reduce((a, c) => a + c.count, 0) })
     const allPrice = computed(() => { return cartList.value.reduce((a, c) => a + c.count * c.price, 0) })
+
+    const singleCheck = (skuId, selected) => {
+        const item = cartList.value.find((item) => item.skuId == skuId)
+        item.selected = selected
+    }
     return {
         cartList,
         addList,
         delCart,
         allCount,
-        allPrice
+        allPrice,
+        singleCheck
     }
 },
-    { persist: true })
+    { persist: true }
+)
