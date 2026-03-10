@@ -1,20 +1,44 @@
 <script setup>
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const goCart = () => {
-  router.push('/cart')
-}
+import {useCartStore} from '@/stores/cartStore'
+const cartStore=useCartStore()
+console.log(cartStore.cartList)
 </script>
 
 <template>
   <div class="cart">
-    <a href="javascript:;" class="curr" @click="goCart">
-      <i class="iconfont icon-cart"></i>
-      <em>0</em>
+    <a class="curr" href="javascript:;">
+      <i class="iconfont icon-cart"></i><em>{{ cartStore.cartList.length }}</em>
     </a>
-  </div>
+    <div class="layer">
+      <div class="list">
+        
+        <div class="item" v-for="i in cartStore.cartList" :key="i">
+          <RouterLink to="">
+            <img :src="i.picture" alt="" />
+            <div class="center">
+              <p class="name ellipsis-2">
+                {{ i.name }}
+              </p>
+              <p class="attr ellipsis">{{ i.attrsText }}</p>
+            </div>
+            <div class="right">
+              <p class="price">&yen;{{ i.price }}</p>
+              <p class="count">x{{ i.count }}</p>
+            </div>
+          </RouterLink>
+          <i class="iconfont icon-close-new" @click="store.delCart(i.skuId)"></i>
+        </div>
+       
+      </div>
+      <div class="foot">
+        <div class="total">
+          <p>共 10 件商品</p>
+          <p>&yen; 100.00 </p>
+        </div>
+        <el-button size="large" type="primary" >去购物车结算</el-button>
+      </div>
+    </div>
+</div>
 </template>
 
 <style scoped lang="scss">
