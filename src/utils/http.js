@@ -37,8 +37,11 @@ httpInstance.interceptors.response.use(
         message: e.response.data.message
       }
     )
+    //不能放在最后面
     if (e.response.status === 401) {
+      // 清除用户信息
       userStore.clearUserInfo()
+      // 跳转登录页面
       router.push('/login')
     }
     return Promise.reject(e);
