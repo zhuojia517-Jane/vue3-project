@@ -25,13 +25,24 @@ export const useCartStore = defineStore('cartStore', () => {
         const item = cartList.value.find((item) => item.skuId == skuId)
         item.selected = selected
     }
+
+    // 是否全选
+    const isAll = computed(() => cartList.value.every((item => item.selected)))
+
+
+    //全选功能
+    const allCheck = (selected) => {
+        cartList.value.forEach((item) => { item.selected = selected })
+    }
     return {
         cartList,
         addList,
         delCart,
         allCount,
         allPrice,
-        singleCheck
+        singleCheck,
+        allCheck,
+        isAll
     }
 },
     { persist: true }
