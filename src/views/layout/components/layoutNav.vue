@@ -1,13 +1,15 @@
 <script setup>
-
+import {useUserStore} from '@/stores/user.js'
+const userStore = useUserStore()
 </script>
 
 <template>
   <nav class="app-topnav">
     <div class="container">
       <ul>
-        <template v-if="false">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a></li>
+        <!-- 采用的是token字块来辨别是否为登录状态 搭配v-if 如果存在则上半部分template，否则下半部分-->
+        <template v-if="userStore.userInfo.token">
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{userStore.userInfo.account}}</a></li>
           <li>
             <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
