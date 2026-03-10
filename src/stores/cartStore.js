@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useUserStore } from './user'
-import { addCartAPI, getCartListAPI } from '@/apis/cart'
+import { useUserStore } from './userStore'
+import { addCartAPI, getCartListAPI, delCartListAPI } from '@/apis/cart'
 export const useCartStore = defineStore('cartStore', () => {
     const userStore = useUserStore()
-    const token = computed(() => userStore.userInfo.token)
+    const isLogin = computed(() => userStore.userInfo.token)
     // 定义数据
     const cartList = ref([])  //注意这里是空数组，后续find，push操作都是数组的方法
     // 定义方法
@@ -14,8 +14,8 @@ export const useCartStore = defineStore('cartStore', () => {
     }
     const addList = async (Good) => {
         const { skuId, count } = Good
-        if (token.value) {
-            await addCartAPI({ skuId, count })
+        if (isLogin.value) {
+            await addCartAPI({ skuId, count });
             updateCartList()
         }
         else {
@@ -30,9 +30,16 @@ export const useCartStore = defineStore('cartStore', () => {
         }
     }
 
-    const delCart = (skuId) => {
-        const idx = cartList.value.findIndex((item) => item.skuId === skuId)
-        cartList.value.splice(idx, 1)
+    const delCart = async (skuId) => {
+        if (isLogin.value) {
+            await delCartListAPI([skuId]);
+            updateCartList()
+        }
+        else {
+            const idx = cartList.value.findIndex((item) => item.skuId === skuId)
+            cartList.value.splice(idx, 1)
+        }
+
     }
     //计算属性 结算个数和金额
     const allCount = computed(() => { return cartList.value.reduce((a, c) => a + c.count, 0) })

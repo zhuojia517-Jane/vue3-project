@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/userStore.js'
 import router from '../router'
 
 const httpInstance = axios.create({

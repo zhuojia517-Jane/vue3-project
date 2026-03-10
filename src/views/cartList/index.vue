@@ -47,7 +47,7 @@ const cartStore=useCartStore()
               </td>
               <td class="tc">
                 <p>
-                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="delCart(i)">
+                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="cartStore.delCart(i.skuId)">
                     <template #reference>
                       <a href="javascript:;">删除</a>
                     </template>
@@ -72,7 +72,7 @@ const cartStore=useCartStore()
       <div class="action">
         <div class="batch">
           共 {{cartStore.allCount}} 件商品，已选择 {{cartStore.selectedCount}} 件，商品合计：
-          <span class="red">¥ {{cartStore.selectedPrice}} </span>
+          <span class="red">¥ {{cartStore.selectedPrice.toFixed(2)}} </span>
         </div>
         <div class="total">
           <el-button size="large" type="primary" >下单结算</el-button>

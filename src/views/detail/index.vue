@@ -1,14 +1,11 @@
 <script setup>
 import DetailHot from '@/views/detail/components/DetailHot.vue'
-import {useCategoryStore} from '@/stores/category'
+import {useCategoryStore} from '@/stores/categoryStore'
 import { getDetailAPI } from '@/apis/detail'
 import {ref,onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 import{useCartStore} from '@/stores/cartStore'
 const count=ref(1)
-const countChange = (count) => {
-  console.log(count)
-}
 let skuObj=ref({})
 const cartStore=useCartStore()
 const Good=ref({})

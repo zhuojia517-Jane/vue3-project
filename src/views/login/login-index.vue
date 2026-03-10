@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import {useUserStore} from '@/stores/user.js'
+import {useUserStore} from '@/stores/userStore.js'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 import { useRouter } from 'vue-router' 
