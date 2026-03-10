@@ -13,10 +13,14 @@ export const useCartStore = defineStore('cartStore', () => {
         }
         //如果没添加，直接push
     }
+    const delCart = (skuId) => {
+        const idx = cartList.value.findIndex((item) => item.skuId === skuId)
+        cartList.value.splice(idx, 1)
+    }
     return {
         cartList,
-        addList
+        addList,
+        delCart
     }
-
 },
     { persist: true })
