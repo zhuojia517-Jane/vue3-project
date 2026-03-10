@@ -3,6 +3,8 @@ import axios from "axios";
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 import { useUserStore } from '@/stores/user.js'
+import router from '../router'
+
 const httpInstance = axios.create({
   baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net",
   timeout: 5000,
@@ -15,7 +17,7 @@ httpInstance.interceptors.request.use(
     const userStore = useUserStore()
     //根据后端要求，携带token
     const token = userStore.userInfo.token
-    if (token) { config.headers.authorization = `Bearer ${token}` }
+    if (token) { config.headers.Authorization = `Bearer ${token}` }
 
     return config;
   },
@@ -27,6 +29,7 @@ httpInstance.interceptors.response.use(
   (res) => res.data,
 
   (e) => {
+    const userStore = useUserStore()
     //登录失败的业务逻辑，返回消息
     ElMessage(
       {
@@ -34,7 +37,12 @@ httpInstance.interceptors.response.use(
         message: e.response.data.message
       }
     )
+    if (e.response.status === 401) {
+      userStore.clearUserInfo()
+      router.push('/login')
+    }
     return Promise.reject(e);
+
   },
 );
 
