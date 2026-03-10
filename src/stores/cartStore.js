@@ -21,6 +21,10 @@ export const useCartStore = defineStore('cartStore', () => {
     const allCount = computed(() => { return cartList.value.reduce((a, c) => a + c.count, 0) })
     const allPrice = computed(() => { return cartList.value.reduce((a, c) => a + c.count * c.price, 0) })
 
+    //计算属性 结算勾选的个数和金额
+    const selectedCount = computed(() => { return cartList.value.filter((item) => item.selected).reduce((a, c) => a + c.count, 0) })
+    const selectedPrice = computed(() => { return cartList.value.filter((item) => item.selected).reduce((a, c) => a + c.count * c.price, 0) })
+
     const singleCheck = (skuId, selected) => {
         const item = cartList.value.find((item) => item.skuId == skuId)
         item.selected = selected
@@ -42,7 +46,9 @@ export const useCartStore = defineStore('cartStore', () => {
         allPrice,
         singleCheck,
         allCheck,
-        isAll
+        isAll,
+        selectedPrice,
+        selectedCount
     }
 },
     { persist: true }
