@@ -41,6 +41,9 @@ export const useCartStore = defineStore('cartStore', () => {
         }
 
     }
+    const clearCart = () => {
+        cartList.value = []
+    }
     //计算属性 结算个数和金额
     const allCount = computed(() => { return cartList.value.reduce((a, c) => a + c.count, 0) })
     const allPrice = computed(() => { return cartList.value.reduce((a, c) => a + c.count * c.price, 0) })
@@ -72,8 +75,9 @@ export const useCartStore = defineStore('cartStore', () => {
         allCheck,
         isAll,
         selectedPrice,
-        selectedCount
+        selectedCount,
+        clearCart
     }
 },
-
+    { persist: true }
 )
