@@ -8,6 +8,7 @@ import category from "@/views/category/category-index.vue";
 import subCategory from "@/views/subCategory/sub-index.vue";
 import Detail from "@/views/detail/index.vue";
 import CartList from '@/views/cartList/index.vue';
+import checkout from '@/views/checkout/index.vue'
 // 注意路径@后面要有/
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,10 @@ const router = createRouter({
           path: "cartlist/",
           component: CartList,
 
+        },
+        {
+          path: 'checkout/',
+          component: checkout
         }
       ],
     },
