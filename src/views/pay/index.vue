@@ -9,6 +9,13 @@ const getPayInfo = async () => {
   const res = await getOrderAPI(route.query.id)
   payInfo.value = res.result
 }
+//跳转支付
+//携带订单id以及回调地址跳转到支付地址
+// 支付地址
+const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+const backURL = 'http://127.0.0.1:5173/paycallback'
+const redirectUrl = encodeURIComponent(backURL)
+const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirectUrl}`
 onMounted(() => getPayInfo())
 
 </script>
