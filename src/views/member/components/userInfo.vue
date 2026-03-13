@@ -1,5 +1,15 @@
 <script setup>
-const userStore = {}
+import { useUserStore } from '@/stores/userStore';
+import { getLikeListAPI } from '@/apis/user';
+import { ref, onMounted } from 'vue'
+import GoodsItems from '@/views/home/components/GoodsItems.vue';
+const userStore = useUserStore()
+const likeList = ref([])
+const getLikeList = async () => {
+  const res = await getLikeListAPI({ limit: 4 })
+  likeList.value = res.result
+}
+onMounted(() => getLikeList())
 </script>
 
 <template>
@@ -32,7 +42,7 @@ const userStore = {}
         <h4 data-v-bcb266e0="">猜你喜欢</h4>
       </div>
       <div class="goods-list">
-        <!-- <GoodsItem v-for="good in likeList" :key="good.id" :good="good" /> -->
+        <GoodsItems v-for="good in likeList" :key="good.id" :good="good" />
       </div>
     </div>
   </div>
@@ -126,6 +136,131 @@ const userStore = {}
   .goods-list {
     display: flex;
     justify-content: space-around;
+  }
+}
+
+.home-product {
+  background: #fff;
+  margin-top: 20px;
+
+  .sub {
+    margin-bottom: 2px;
+
+    a {
+      padding: 2px 12px;
+      font-size: 16px;
+      border-radius: 4px;
+
+      &:hover {
+        background: $xtxColor;
+        color: #fff;
+      }
+
+      &:last-child {
+        margin-right: 80px;
+      }
+    }
+  }
+
+  .box {
+    display: flex;
+
+    .cover {
+      width: 240px;
+      height: 610px;
+      margin-right: 10px;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .label {
+        width: 188px;
+        height: 66px;
+        display: flex;
+        font-size: 18px;
+        color: #fff;
+        line-height: 66px;
+        font-weight: normal;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate3d(0, -50%, 0);
+
+        span {
+          text-align: center;
+
+          &:first-child {
+            width: 76px;
+            background: rgba(0, 0, 0, 0.9);
+          }
+
+          &:last-child {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+          }
+        }
+      }
+    }
+
+    .goods-list {
+      width: 990px;
+      display: flex;
+      flex-wrap: wrap;
+
+      li {
+        width: 240px;
+        height: 300px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+
+        &:nth-last-child(-n + 4) {
+          margin-bottom: 0;
+        }
+
+        &:nth-child(4n) {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .goods-item {
+      display: block;
+      width: 220px;
+      padding: 20px 30px;
+      text-align: center;
+      transition: all .5s;
+
+      &:hover {
+        transform: translate3d(0, -3px, 0);
+        box-shadow: 0 3px 8px rgb(0 0 0 / 20%);
+      }
+
+      img {
+        width: 160px;
+        height: 160px;
+      }
+
+      p {
+        padding-top: 10px;
+      }
+
+      .name {
+        font-size: 16px;
+      }
+
+      .desc {
+        color: #999;
+        height: 29px;
+      }
+
+      .price {
+        color: $priceColor;
+        font-size: 20px;
+      }
+    }
   }
 }
 </style>

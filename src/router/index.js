@@ -11,7 +11,7 @@ import CartList from '@/views/cartList/index.vue';
 import checkout from '@/views/checkout/index.vue';
 import Pay from '@/views/pay/index.vue';
 import PayBack from '@/views/pay/payback.vue';
-import Member from '@/views/member/index.vue';
+import Member from '@/views/member/member-index.vue';
 import userInfo from '@/views/member/components/userInfo.vue'
 import userOrder from '@/views/member/components/userOrder.vue'
 // 注意路径@后面要有/
