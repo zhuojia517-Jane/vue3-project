@@ -61,7 +61,7 @@ const router = createRouter({
           component: Member,
           children: [
             {
-              path: 'user',
+              path: '', //置空时可以默认展示三级路由界面
               component: userInfo
             },
             {
