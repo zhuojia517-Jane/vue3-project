@@ -18,12 +18,18 @@ const params = ref({
   pageSize: 2
 })
 const orderList = ref([])
+const total = ref(0)
 const getOrderList = async () => {
   const res = await getUserOrderAPI(params.value)
   orderList.value = res.result.items
+  total.value = res.result.counts
 }
 const tabChange = (type) => {
   params.value.orderState = type
+  getOrderList()
+}
+const pageChange = (page) => {
+  params.value.page = page
   getOrderList()
 }
 onMounted(() => getOrderList())
@@ -108,7 +114,8 @@ onMounted(() => getOrderList())
           </div>
           <!-- 分页 -->
           <div class="pagination-container">
-            <el-pagination background layout="prev, pager, next" />
+            <el-pagination @current-change="pageChange" :total="total" :page-size="params.pageSize" background
+              layout="prev, pager, next" />
           </div>
         </div>
       </div>
