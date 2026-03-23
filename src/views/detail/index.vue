@@ -1,46 +1,37 @@
 <script setup>
 import DetailHot from '@/views/detail/components/DetailHot.vue'
-import {useCategoryStore} from '@/stores/categoryStore'
-import { getDetailAPI } from '@/apis/detail'
-import {ref,onMounted} from 'vue'
-import {useRoute} from 'vue-router'
-import{useCartStore} from '@/stores/cartStore'
-const count=ref(1)
-let skuObj=ref({})
-const cartStore=useCartStore()
-const Good=ref({})
-const route=useRoute()
-const getGood=async()=>{
-    const res=await getDetailAPI(route.params.id)
-    Good.value=res.result
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import 'element-plus/es/components/message/style/css'
+import { useCartStore } from '@/stores/cartStore'
+import { useProduct } from '@/composables/useProduct'
+
+const { product: Good } = useProduct()
+const cartStore = useCartStore()
+
+const count = ref(1)
+const skuObj = ref({})
+
+const sku = (sku) => {
+  skuObj.value = sku
 }
-onMounted(()=>{
-    getGood()
-})
-const sku=(sku)=>{
-    console.log(sku)
-    skuObj=sku
-}
-const addCart=()=>{
-  console.log('加入购物车')
-  if(skuObj.skuId)
-{
-  cartStore.addList({
-    id:Good.value.id,
-    name:Good.value.name,
-    picture:Good.value.mainPictures[0],
-    price:Good.value.price,
-    count:count.value,
-    skuId:skuObj.skuId,
-    attrsText:skuObj.specsText,
-    selected:true
-  })
-}
-  else{
+
+const addCart = () => {
+  if (skuObj.value.skuId) {
+    cartStore.addList({
+      id: Good.value.id,
+      name: Good.value.name,
+      picture: Good.value.mainPictures[0],
+      price: Good.value.price,
+      count: count.value,
+      skuId: skuObj.value.skuId,
+      attrsText: skuObj.value.specsText,
+      selected: true
+    })
+  } else {
     ElMessage.warning('请选择完整的商品信息')
   }
 }
-
 </script>
 
 <template>

@@ -1,11 +1,11 @@
 <script setup>
-
+import CustomerService from '@/components/CustomerService.vue'
 </script>
 
 <template>
   <!-- 一级组件出口 -->
   <RouterView />
-
+  <CustomerService />
 </template>
 
 <style scoped lang="scss">

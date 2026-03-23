@@ -1,11 +1,21 @@
 <script setup>
-import {useCartStore} from '@/stores/cartStore'
-import {useRouter} from 'vue-router'
-const router=useRouter()
-const cartStore=useCartStore()
+import { useCart } from '@/composables/useCart'
+import { useRouter } from 'vue-router'
 
-const checkout=()=>{
+const router = useRouter()
+const {
+  cartList,
+  allCount,
+  selectedCount,
+  selectedPrice,
+  isAll,
+  delCart,
+  singleCheck,
+  allCheck
+} = useCart()
 
+const checkout = () => {
+  router.push('/checkout')
 }
 </script>
 
@@ -17,7 +27,7 @@ const checkout=()=>{
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox :model-value="cartStore.isAll" @change="cartStore.allCheck"/>
+                <el-checkbox :model-value="isAll" @change="allCheck" />
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
@@ -28,13 +38,13 @@ const checkout=()=>{
           </thead>
           <!-- 商品列表 -->
           <tbody>
-            <tr v-for="i in cartStore.cartList" :key="i.id">
+            <tr v-for="i in cartList" :key="i.skuId">
               <td>
-                <el-checkbox :model-value="i.selected" @change="(selected)=>cartStore.singleCheck(i.skuId,selected)"/>
+                <el-checkbox :model-value="i.selected" @change="(selected) => singleCheck(i.skuId, selected)" />
               </td>
               <td>
                 <div class="goods">
-                  <RouterLink to="/"><img :src="i.picture" alt="" /></RouterLink>
+                  <RouterLink :to="`/detail/${i.id}`"><img :src="i.picture" alt="" /></RouterLink>
                   <div>
                     <p class="name ellipsis">
                       {{ i.name }}
@@ -53,7 +63,7 @@ const checkout=()=>{
               </td>
               <td class="tc">
                 <p>
-                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="cartStore.delCart(i.skuId)">
+                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="delCart(i.skuId)">
                     <template #reference>
                       <a href="javascript:;">删除</a>
                     </template>
@@ -61,27 +71,26 @@ const checkout=()=>{
                 </p>
               </td>
             </tr>
-            <tr v-if="cartStore.cartList.length === 0">
+            <tr v-if="cartList.length === 0">
               <td colspan="6">
                 <div class="cart-none">
                   <el-empty description="购物车列表为空">
-                    <el-button type="primary">随便逛逛</el-button>
+                    <el-button type="primary" @click="$router.push('/')">随便逛逛</el-button>
                   </el-empty>
                 </div>
               </td>
             </tr>
           </tbody>
-
         </table>
       </div>
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          共 {{cartStore.allCount}} 件商品，已选择 {{cartStore.selectedCount}} 件，商品合计：
-          <span class="red">¥ {{cartStore.selectedPrice.toFixed(2)}} </span>
+          共 {{ allCount }} 件商品，已选择 {{ selectedCount }} 件，商品合计：
+          <span class="red">¥ {{ selectedPrice.toFixed(2) }} </span>
         </div>
         <div class="total">
-          <el-button size="large" type="primary" @click="$router.push('/checkout')">下单结算</el-button>
+          <el-button size="large" type="primary" @click="checkout">下单结算</el-button>
         </div>
       </div>
     </div>
