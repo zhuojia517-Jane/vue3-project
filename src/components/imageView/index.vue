@@ -1,15 +1,15 @@
 <script setup>
-import { ref,watch } from "vue";
-import { useMouseInElement } from '@vueuse/core'
+import { ref, watch } from "vue";
+import { useMouseInElement } from "@vueuse/core";
 // 图片列表
 //props适配
 
 defineProps({
   imageList: {
-   type: Array,
-    default: () => []
-  }
-})
+    type: Array,
+    default: () => [],
+  },
+});
 // const imageList = [
 //   "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
 //   "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
@@ -18,38 +18,33 @@ defineProps({
 //   "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
 // ]
 //小图切换大图
-const curIndex= ref(0)
-const mouseenterFn=(i)=>{
-    curIndex.value=i
-}
+const curIndex = ref(0);
+const mouseenterFn = (i) => {
+  curIndex.value = i;
+};
 // 放大镜
-const target = ref(null)
-const left=ref(0)
-const top=ref(0)
-const positionX=ref(0)
-const positionY=ref(0)
+const target = ref(null);
+const left = ref(0);
+const top = ref(0);
+const positionX = ref(0);
+const positionY = ref(0);
 
-const {elementX,elementY,isOutside}=useMouseInElement(target)
+const { elementX, elementY, isOutside } = useMouseInElement(target);
 
-watch([elementX,elementY,isOutside],()=>{
-  console.log('xy变化了')
-  if(isOutside.value) return
-  console.log('后续逻辑执行')
-  if(elementX.value>100&&elementX.value<300) left.value=elementX.value-100
-  if(elementY.value>100&&elementY.value<300) top.value=elementY.value-100
-  if(elementX.value<100) left.value=0
-  if(elementX.value>300) left.value=200
-  if(elementY.value<100) top.value=0
-  if(elementY.value>300) top.value=200
-  positionX.value=-left.value*2
-  positionY.value=-top.value*2
-
-})
-
-
-
+watch([elementX, elementY, isOutside], () => {
+  // console.log('xy变化了')
+  if (isOutside.value) return;
+  // console.log('后续逻辑执行')
+  if (elementX.value > 100 && elementX.value < 300) left.value = elementX.value - 100;
+  if (elementY.value > 100 && elementY.value < 300) top.value = elementY.value - 100;
+  if (elementX.value < 100) left.value = 0;
+  if (elementX.value > 300) left.value = 200;
+  if (elementY.value < 100) top.value = 0;
+  if (elementY.value > 300) top.value = 200;
+  positionX.value = -left.value * 2;
+  positionY.value = -top.value * 2;
+});
 </script>
-
 
 <template>
   <div class="goods-image">
@@ -57,22 +52,31 @@ watch([elementX,elementY,isOutside],()=>{
     <div class="middle" ref="target">
       <img :src="imageList[curIndex]" alt="" />
       <!-- 蒙层小滑块 -->
-      <div class="layer"  v-show="!isOutside" :style="{ left: `${left}px`, top: `${top}px` }"></div>
+      <div class="layer" v-show="!isOutside" :style="{ left: `${left}px`, top: `${top}px` }"></div>
     </div>
     <!-- 小图列表 -->
     <ul class="small">
-      <li v-for="(img, i) in imageList" :key="i" @mouseenter="mouseenterFn(i)" :class="{active:curIndex===i}">
+      <li
+        v-for="(img, i) in imageList"
+        :key="i"
+        @mouseenter="mouseenterFn(i)"
+        :class="{ active: curIndex === i }"
+      >
         <img :src="img" alt="" />
       </li>
     </ul>
     <!-- 放大镜大图 -->
-    <div class="large" :style="[
-      {
-        backgroundImage: `url(${imageList[0]})`,
-        backgroundPositionX: `${positionX}px`,
-        backgroundPositionY: `${positionY}px`,
-      },
-    ]" v-show="!isOutside"></div>
+    <div
+      class="large"
+      :style="[
+        {
+          backgroundImage: `url(${imageList[0]})`,
+          backgroundPositionX: `${positionX}px`,
+          backgroundPositionY: `${positionY}px`,
+        },
+      ]"
+      v-show="!isOutside"
+    ></div>
   </div>
 </template>
 
