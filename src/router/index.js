@@ -1,20 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
-//createRouter：创建router实例对象
-//createWebHistory：创建history模式的路由
-import login from "@/views/login/login-index.vue";
-import layout from "@/views/layout/layout-index.vue";
-import home from "@/views/home/home-index.vue";
-import category from "@/views/category/category-index.vue";
-import subCategory from "@/views/subCategory/sub-index.vue";
-import Detail from "@/views/detail/index.vue";
-import CartList from '@/views/cartList/index.vue';
-import checkout from '@/views/checkout/index.vue';
-import Pay from '@/views/pay/index.vue';
-import PayBack from '@/views/pay/payback.vue';
-import Member from '@/views/member/member-index.vue';
-import userInfo from '@/views/member/components/userInfo.vue'
-import userOrder from '@/views/member/components/userOrder.vue'
-// 注意路径@后面要有/
+
+const login = () => import('@/views/login/login-index.vue')
+const layout = () => import('@/views/layout/layout-index.vue')
+const home = () => import('@/views/home/home-index.vue')
+const category = () => import('@/views/category/category-index.vue')
+const subCategory = () => import('@/views/subCategory/sub-index.vue')
+const Detail = () => import('@/views/detail/index.vue')
+const CartList = () => import('@/views/cartList/index.vue')
+const checkout = () => import('@/views/checkout/index.vue')
+const Pay = () => import('@/views/pay/index.vue')
+const PayBack = () => import('@/views/pay/payback.vue')
+const Member = () => import('@/views/member/member-index.vue')
+const userInfo = () => import('@/views/member/components/userInfo.vue')
+const userOrder = () => import('@/views/member/components/userOrder.vue')
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

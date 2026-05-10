@@ -1,46 +1,50 @@
 <script setup>
 
-import { getCategoryFilterAPI, getSubCategoryAPI } from "@/apis/category.js"
-import { ref, onMounted, watchEffect } from "vue"
-import { useRoute } from "vue-router"
+import { getCategoryFilterAPI, getSubCategoryAPI } from '@/apis/category.js'
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useElementSize } from '@vueuse/core'
 
-import GoodsItem from "../category/components/GoodsItem.vue"
+import GoodsItem from '../category/components/GoodsItem.vue'
+import VirtualList from '@/components/VirtualList.vue'
+
 const filterData = ref({})
 const route = useRoute()
+
 const getCategoryFilter = async () => {
   const res = await getCategoryFilterAPI(route.params.id)
-  console.log('分类过滤器数据:', res.result)
   filterData.value = res.result
 }
 
 const goodList = ref([])
-// 注意这里 ref
 const reqData = ref({
   categoryId: route.params.id,
   page: 1,
   pageSize: 20,
   sortField: 'publishTime'
 })
+
 const getGoodList = async () => {
   const res = await getSubCategoryAPI(reqData.value)
-  console.log('商品列表数据:', res.result)
   goodList.value = res.result.items || []
 }
-//切换tab的回调函数
-const tabchange=()=>{
-  console.log('tabchange',reqData.value.sortField)
+
+const tabChange = () => {
   reqData.value.page = 1
   getGoodList()
 }
-//无限加载
-const disabled=ref(false)
-const load=async()=>{
-  console.log('load')
+
+const disabled = ref(false)
+const load = async () => {
   reqData.value.page++
-  const res =await getSubCategoryAPI(reqData.value)
-  goodList.value=[...goodList.value,...res.result.items]
-  if(res.result.items.length===0) disabled.value=true
+  const res = await getSubCategoryAPI(reqData.value)
+  goodList.value = [...goodList.value, ...res.result.items]
+  if (res.result.items.length === 0) disabled.value = true
 }
+
+const listContainer = ref(null)
+const { height: containerHeight } = useElementSize(listContainer)
+const vListHeight = computed(() => Math.max(containerHeight.value - 20, 400))
 
 onMounted(() => {
   getCategoryFilter()
@@ -60,13 +64,26 @@ onMounted(() => {
       </el-breadcrumb>
     </div>
     <div class="sub-container" >
-      <el-tabs v-model="reqData.sortField" @tab-change="tabchange">
+      <el-tabs v-model="reqData.sortField" @tab-change="tabChange">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body" @end-reached="load">
-        <GoodsItem v-for="goods in goodList" :goods="goods" :key="goods.id"></GoodsItem>
+      <div ref="listContainer" class="body">
+        <VirtualList
+          v-if="goodList.length"
+          :items="goodList"
+          :item-height="230"
+          :item-width="185"
+          :container-height="vListHeight"
+          :gap="15"
+          item-key="id"
+          @load-more="load"
+        >
+          <template #item="{ item }">
+            <GoodsItem :goods="item" />
+          </template>
+        </VirtualList>
       </div>
     </div>
   </div>
@@ -86,8 +103,7 @@ onMounted(() => {
   background-color: #fff;
 
   .body {
-    display: flex;
-    flex-wrap: wrap;
+    min-height: 400px;
     padding: 0 10px;
   }
 
