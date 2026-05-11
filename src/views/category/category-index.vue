@@ -1,16 +1,39 @@
 <script setup>
-
-
-
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { getSubCategoryAPI } from '@/apis/category'
 
 import GoodsItem from '../home/components/GoodsItems.vue'
-
 
 import { useCategory } from './composables/useCategory';
 import { useBanner } from './composables/useBanner.js'
 
 const { categoryData } = useCategory()
 const { bannerList } = useBanner()
+
+const route = useRoute()
+
+const goodList = ref([])
+const reqData = ref({
+  categoryId: route.params.id,
+  page: 1,
+  pageSize: 20,
+  sortField: 'publishTime'
+})
+
+const getGoodList = async () => {
+  const res = await getSubCategoryAPI(reqData.value)
+  goodList.value = res.result.items || []
+}
+
+const tabChange = () => {
+  reqData.value.page = 1
+  getGoodList()
+}
+
+onMounted(() => {
+  getGoodList()
+})
 </script>
 
 <template>
@@ -52,13 +75,16 @@ const { bannerList } = useBanner()
       </div>
     </div>
     <div class="sub-container" >
-      <el-tabs>
+      <el-tabs v-model="reqData.sortField" @tab-change="tabChange">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
       <div class="body">
-        <!-- 商品列表-->
+        <div class="goods-list" v-if="goodList.length">
+          <GoodsItem v-for="good in goodList" :key="good.id" :good="good" />
+        </div>
+        <div v-else class="none-tip">暂无商品</div>
       </div>
     </div>
   </div>
@@ -155,6 +181,66 @@ const { bannerList } = useBanner()
   img {
     width: 100%;
     height: 500px;
+  }
+}
+
+.sub-container {
+  padding: 20px 10px;
+  background-color: #fff;
+  margin-top: 20px;
+
+  .body {
+    min-height: 200px;
+    padding: 0 10px;
+  }
+
+  .goods-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .goods-item {
+      display: block;
+      width: 220px;
+      padding: 20px 30px;
+      text-align: center;
+      transition: all .5s;
+
+      &:hover {
+        transform: translate3d(0, -3px, 0);
+        box-shadow: 0 3px 8px rgb(0 0 0 / 20%);
+      }
+
+      img {
+        width: 160px;
+        height: 160px;
+      }
+
+      p {
+        padding-top: 10px;
+      }
+
+      .name {
+        font-size: 16px;
+      }
+
+      .desc {
+        color: #999;
+        height: 29px;
+      }
+
+      .price {
+        color: $priceColor;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .none-tip {
+    text-align: center;
+    color: #999;
+    padding: 60px 0;
+    font-size: 14px;
   }
 }
 </style>

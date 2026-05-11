@@ -197,19 +197,19 @@ const delAddress = async (id) => {
           <div class="total">
             <dl>
               <dt>商品件数：</dt>
-              <dd>件</dd>
+              <dd>{{ checkInfo.summary?.goodsCount }}件</dd>
             </dl>
             <dl>
               <dt>商品总价：</dt>
-              <dd></dd>
+              <dd>&yen;{{ checkInfo.summary?.totalPrice?.toFixed(2) }}</dd>
             </dl>
             <dl>
               <dt>运<i></i>费：</dt>
-              <dd></dd>
+              <dd>&yen;{{ checkInfo.summary?.postFee?.toFixed(2) }}</dd>
             </dl>
             <dl>
               <dt>应付总额：</dt>
-              <dd class="price"></dd>
+              <dd class="price">&yen;{{ checkInfo.summary?.totalPayPrice?.toFixed(2) }}</dd>
             </dl>
           </div>
         </div>
