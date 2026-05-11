@@ -1,14 +1,14 @@
 <script setup>
-import {getOrderAPI} from '@/apis/pay'
-import{ref,onMounted} from 'vue'
-import {useRoute} from 'vue-router'
-const route=useRoute()
-const orderInfo=ref(null)
-const getOrder=async()=>{
-    const res=await getOrderAPI($route.params.id)
-    orderInfo.value=res.result
-    }
-onMounted(()=>{getOrder()})
+import { getOrderAPI } from '@/apis/pay'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+const $route = useRoute()
+const orderInfo = ref(null)
+const getOrder = async () => {
+  const res = await getOrderAPI($route.params.id)
+  orderInfo.value = res.result
+}
+onMounted(() => { getOrder() })
 </script>
 
 
@@ -16,15 +16,15 @@ onMounted(()=>{getOrder()})
   <div class="xtx-pay-page">
     <div class="container">
       <!-- 支付结果 -->
-       <!-- //获取到的路由参数是字符串类型的 -->
+      <!-- //获取到的路由参数是字符串类型的 -->
       <div class="pay-result">
-        <span class="iconfont icon-queren2 green" v-if="$route.params.payResult==='true'"></span>
+        <span class="iconfont icon-queren2 green" v-if="$route.params.payResult === 'true'"></span>
         <span class="iconfont icon-shanchu red" v-else></span>
-        <p class="tit" v-if="$route.params.payResult==='true'">支付成功</p>
+        <p class="tit" v-if="$route.params.payResult === 'true'">支付成功</p>
         <p class="tit" v-else>支付失败</p>
         <p class="tip">我们将尽快为您发货，收货期间请保持手机畅通</p>
         <p>支付方式：<span>支付宝</span></p>
-        <p>支付金额：<span>{{orderInfo.payMoney?.toFixed(2)}}</span></p>
+        <p>支付金额：<span>{{ orderInfo.payMoney?.toFixed(2) }}</span></p>
         <div class="btn">
           <el-button type="primary" style="margin-right:20px">查看订单</el-button>
           <el-button>进入首页</el-button>
