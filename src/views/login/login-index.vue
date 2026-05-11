@@ -27,7 +27,6 @@ const rules={
   agree:[
     {
       validator(rule,value,callback){
-        console.log(value)
         if(value) callback()
         else callback(new Error('请同意隐私条款和服务条款'))
       }

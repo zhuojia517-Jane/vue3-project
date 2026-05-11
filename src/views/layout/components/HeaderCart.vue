@@ -3,7 +3,6 @@ import {useCartStore} from '@/stores/cartStore'
 import {useRouter} from 'vue-router'
 const router=useRouter()
 const cartStore=useCartStore()
-// console.log(cartStore.cartList)
 </script>
 
 <template>

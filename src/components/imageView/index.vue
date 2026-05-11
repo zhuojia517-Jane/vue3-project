@@ -32,9 +32,7 @@ const positionY = ref(0);
 const { elementX, elementY, isOutside } = useMouseInElement(target);
 
 watch([elementX, elementY, isOutside], () => {
-  // console.log('xy变化了')
   if (isOutside.value) return;
-  // console.log('后续逻辑执行')
   if (elementX.value > 100 && elementX.value < 300) left.value = elementX.value - 100;
   if (elementY.value > 100 && elementY.value < 300) top.value = elementY.value - 100;
   if (elementX.value < 100) left.value = 0;

@@ -4,8 +4,6 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const userStore = useUserStore()
 const confirm = () => {
-  console.log('用户点击了退出登录')
-  // 编写退出登录逻辑
   userStore.clearUserInfo()
   router.push(`/login`)
 }
@@ -26,7 +24,7 @@ const confirm = () => {
             </el-popconfirm>
           </li>
           <li><a href="javascript:;" @click="$router.push('/member/order')">我的订单</a></li>
-          <li><a href="javascript:;" @click="$router.push('/member/user')">会员中心</a></li>
+          <li><a href="javascript:;" @click="$router.push('/member')">个人中心</a></li>
         </template>
         <template v-else>
           <li><a href="javascript:;" @click="$router.push('/login')">请先登录</a></li>
