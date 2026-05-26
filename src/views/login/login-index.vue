@@ -1,29 +1,30 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/userStore.js'
+import { getMobileCodeAPI } from '@/apis/user'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 import { useRouter } from 'vue-router'
-//useRouter 可以调用方法 useRoute可以获取参数
 const userStore = useUserStore()
 const formRef = ref(null)
 const router = useRouter()
+
+const activeTab = ref('account')
+
 const form = ref({
   account: '',
   password: '',
   agree: true
 })
-//1.账号密码规则简单校验
+
 const rules = {
   account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 10, message: '长度在 6 到 24 个字符', trigger: 'blur' }
+    { min: 6, max: 24, message: '长度在 6 到 24 个字符', trigger: 'blur' }
   ],
-  //2.同意条款 规则采用自定义验证
   agree: [
     {
       validator(rule, value, callback) {
@@ -37,17 +38,56 @@ const rules = {
 const doLogin = () => {
   const { account, password } = form.value
   formRef.value.validate(async (valid) => {
-    if (valid)
-    //登录成功的业务逻辑
-    {
-      await userStore.getUserInfo({ account, password })
-      //提示用户
-      ElMessage({ type: 'success', message: '登录成功' })
-      //跳转首页
-      router.replace({ path: '/' })
-    }
+    if (!valid) return
+    await userStore.getUserInfo({ account, password })
+    ElMessage({ type: 'success', message: '登录成功' })
+    router.replace({ path: '/' })
   })
+}
 
+const mobile = ref('')
+const code = ref('')
+const codeSending = ref(false)
+const countdown = ref(0)
+let timer = null
+
+const canSendCode = computed(() => {
+  return /^1\d{10}$/.test(mobile.value) && !codeSending.value && countdown.value === 0
+})
+
+const sendCode = async () => {
+  if (!canSendCode.value) return
+  codeSending.value = true
+  try {
+    await getMobileCodeAPI(mobile.value)
+    ElMessage.success('验证码已发送')
+    countdown.value = 60
+    timer = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(timer)
+        timer = null
+      }
+    }, 1000)
+  } catch {
+    // http interceptor handles
+  } finally {
+    codeSending.value = false
+  }
+}
+
+const doMobileLogin = async () => {
+  if (!/^1\d{10}$/.test(mobile.value)) {
+    ElMessage.warning('请输入正确的手机号')
+    return
+  }
+  if (!code.value) {
+    ElMessage.warning('请输入验证码')
+    return
+  }
+  await userStore.loginByMobile({ mobile: mobile.value, code: code.value })
+  ElMessage({ type: 'success', message: '登录成功' })
+  router.replace({ path: '/' })
 }
 </script>
 
@@ -67,12 +107,18 @@ const doLogin = () => {
       </div>
     </header>
     <section class="login-section">
+      <picture class="login-bg">
+        <source srcset="@/assets/images/login-bg.webp" type="image/webp">
+        <img src="@/assets/images/login-bg.png" alt="">
+      </picture>
       <div class="wrapper">
         <nav>
-          <a href="javascript:;">账户登录</a>
+          <a href="javascript:;" :class="{ active: activeTab === 'account' }" @click="activeTab = 'account'">账户登录</a>
+          <a href="javascript:;" :class="{ active: activeTab === 'sms' }" @click="activeTab = 'sms'">短信登录</a>
         </nav>
         <div class="account-box">
-          <div class="form">
+          <!-- 账户密码登录 -->
+          <div class="form" v-if="activeTab === 'account'">
             <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
               <el-form-item prop="account" label="账户">
                 <el-input v-model="form.account" />
@@ -86,6 +132,26 @@ const doLogin = () => {
                 </el-checkbox>
               </el-form-item>
               <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
+            </el-form>
+          </div>
+          <!-- 短信登录 -->
+          <div class="form" v-if="activeTab === 'sms'">
+            <el-form label-position="right" label-width="60px" status-icon>
+              <el-form-item label="手机号">
+                <el-input v-model="mobile" placeholder="请输入手机号" />
+              </el-form-item>
+              <el-form-item label="验证码">
+                <div class="sms-row">
+                  <el-input v-model="code" placeholder="请输入验证码" />
+                  <el-button
+                    class="sms-btn"
+                    :disabled="!canSendCode"
+                    :loading="codeSending"
+                    @click="sendCode"
+                  >{{ countdown > 0 ? countdown + 's后重发' : '获取验证码' }}</el-button>
+                </div>
+              </el-form-item>
+              <el-button size="large" class="subBtn" @click="doMobileLogin">点击登录</el-button>
             </el-form>
           </div>
         </div>
@@ -155,9 +221,21 @@ const doLogin = () => {
 }
 
 .login-section {
-  background: url('@/assets/images/login-bg.png') no-repeat center / cover;
   height: 488px;
   position: relative;
+  overflow: hidden;
+
+  .login-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 
   .wrapper {
     width: 380px;
@@ -167,6 +245,7 @@ const doLogin = () => {
     top: 54px;
     transform: translate3d(100px, 0, 0);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    z-index: 1;
 
     nav {
       font-size: 14px;
@@ -185,6 +264,10 @@ const doLogin = () => {
         font-size: 18px;
         position: relative;
         text-align: center;
+        &.active {
+          color: $xtxColor;
+          font-weight: bold;
+        }
       }
     }
   }
@@ -334,5 +417,13 @@ const doLogin = () => {
   background: $xtxColor;
   width: 100%;
   color: #fff;
+}
+.sms-row {
+  display: flex;
+  gap: 8px;
+  .sms-btn {
+    flex-shrink: 0;
+    width: 120px;
+  }
 }
 </style>

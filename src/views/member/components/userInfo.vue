@@ -2,6 +2,7 @@
 import { useUserStore } from '@/stores/userStore';
 import { getLikeListAPI } from '@/apis/user';
 import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 import GoodsItems from '@/views/home/components/GoodsItems.vue';
 const userStore = useUserStore()
 const likeList = ref([])
@@ -10,6 +11,8 @@ const getLikeList = async () => {
   likeList.value = res.result
 }
 onMounted(() => getLikeList())
+
+const goSecurity = () => ElMessage.info('安全设置功能开发中')
 </script>
 
 <template>
@@ -22,18 +25,18 @@ onMounted(() => getLikeList())
       <h4>{{ userStore.userInfo?.account }}</h4>
     </div>
     <div class="item">
-      <a href="javascript:;">
+      <RouterLink to="/member">
         <span class="iconfont icon-hy"></span>
         <p>会员中心</p>
-      </a>
-      <a href="javascript:;">
+      </RouterLink>
+      <a href="javascript:;" @click.prevent="goSecurity">
         <span class="iconfont icon-aq"></span>
         <p>安全设置</p>
       </a>
-      <a href="javascript:;">
+      <RouterLink to="/member/address">
         <span class="iconfont icon-dw"></span>
         <p>地址管理</p>
-      </a>
+      </RouterLink>
     </div>
   </div>
   <div class="like-container">

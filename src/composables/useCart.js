@@ -21,6 +21,10 @@ export function useCart() {
     cartStore.allCheck(selected)
   }
 
+  const updateCount = (skuId, count) => {
+    cartStore.updateCount(skuId, count)
+  }
+
   return {
     cartList,
     allCount,
@@ -30,6 +34,7 @@ export function useCart() {
     addCart,
     delCart,
     singleCheck,
-    allCheck
+    allCheck,
+    updateCount
   }
 }

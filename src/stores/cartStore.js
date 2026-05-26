@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from './userStore'
-import { addCartAPI, getCartListAPI, delCartListAPI } from '@/apis/cart'
+import { addCartAPI, getCartListAPI, delCartListAPI, updateCartItemAPI, updateCartSelectAllAPI } from '@/apis/cart'
 export const useCartStore = defineStore('cartStore', () => {
     const userStore = useUserStore()
     const isLogin = computed(() => userStore.userInfo.token)
@@ -55,6 +55,17 @@ export const useCartStore = defineStore('cartStore', () => {
     const singleCheck = (skuId, selected) => {
         const item = cartList.value.find((item) => item.skuId == skuId)
         item.selected = selected
+        if (isLogin.value) {
+            updateCartItemAPI({ skuId, selected, count: item.count })
+        }
+    }
+
+    const updateCount = (skuId, count) => {
+        const item = cartList.value.find((item) => item.skuId == skuId)
+        if (item) item.count = count
+        if (isLogin.value) {
+            updateCartItemAPI({ skuId, selected: item.selected, count })
+        }
     }
 
     // 是否全选
@@ -64,6 +75,10 @@ export const useCartStore = defineStore('cartStore', () => {
     //全选功能
     const allCheck = (selected) => {
         cartList.value.forEach((item) => { item.selected = selected })
+        if (isLogin.value) {
+            const ids = cartList.value.map(item => item.skuId)
+            updateCartSelectAllAPI({ selected, ids })
+        }
     }
     return {
         cartList,
@@ -77,7 +92,8 @@ export const useCartStore = defineStore('cartStore', () => {
         selectedPrice,
         selectedCount,
         clearCart,
-        updateCartList
+        updateCartList,
+        updateCount
     }
 },
     { persist: true }

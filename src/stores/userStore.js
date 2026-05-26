@@ -1,16 +1,22 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { loginAPI } from "@/apis/user.js";
+import { loginAPI, loginByMobileAPI } from "@/apis/user.js";
 import { useCartStore } from "@/stores/cartStore.js";
 import { mergeCartAPI } from "@/apis/cart.js";
 export const useUserStore = defineStore('userStore', () => {
     const cartStore = useCartStore()
-    //准备state
     const userInfo = ref({})
-    // 准备action
     const getUserInfo = async ({ account, password }) => {
         const res = await loginAPI({ account, password })
         userInfo.value = res.result
+        await mergeCart()
+    }
+    const loginByMobile = async ({ mobile, code }) => {
+        const res = await loginByMobileAPI({ mobile, code })
+        userInfo.value = res.result
+        await mergeCart()
+    }
+    const mergeCart = async () => {
         await mergeCartAPI(cartStore.cartList.map(item => {
             return {
                 skuId: item.skuId,
@@ -24,8 +30,7 @@ export const useUserStore = defineStore('userStore', () => {
         userInfo.value = {}
         cartStore.clearCart()
     }
-    return { userInfo, getUserInfo, clearUserInfo }
+    return { userInfo, getUserInfo, loginByMobile, clearUserInfo }
 },
-    // 持久化配置，存进localstorage ，用的是pinia -Plugin -persistedstate
     { persist: true }
 ) 

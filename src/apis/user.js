@@ -10,6 +10,20 @@ export function loginAPI({ account, password }) {
         }
     })
 }
+export function getMobileCodeAPI(mobile) {
+    return request({
+        url: '/login/code',
+        method: 'GET',
+        params: { account: mobile }
+    })
+}
+export function loginByMobileAPI({ mobile, code }) {
+    return request({
+        url: '/login/code',
+        method: 'POST',
+        data: { mobile, code }
+    })
+}
 export const getLikeListAPI = ({ limit = 4 }) => {
   return request({
     url:'/goods/relevant',

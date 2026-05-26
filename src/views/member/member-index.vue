@@ -13,6 +13,10 @@
         <div class="links">
           <RouterLink to="/member/order">我的订单</RouterLink>
         </div>
+        <h4>账户管理</h4>
+        <div class="links">
+          <RouterLink to="/member/address">地址管理</RouterLink>
+        </div>
       </div>
     </div>
     <div class="article">

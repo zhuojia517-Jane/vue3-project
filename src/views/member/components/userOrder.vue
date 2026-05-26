@@ -1,7 +1,11 @@
 <script setup>
 import { getUserOrderAPI } from '@/apis/order'
 import { ref, onMounted } from 'vue'
-// 创建格式化函数
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+
+const $router = useRouter()
+
 const fomartPayState = (payState) => {
   const stateMap = {
     1: '待付款',
@@ -47,6 +51,14 @@ const pageChange = (page) => {
   params.value.page = page
   getOrderList()
 }
+
+const goPay = (id) => $router.push('/pay?id=' + id)
+const goDetail = (id) => $router.push('/pay?id=' + id)
+const confirmReceipt = () => ElMessage.info('确认收货功能开发中')
+const buyAgain = () => ElMessage.info('再次购买功能开发中')
+const cancelOrder = () => ElMessage.info('取消订单功能开发中')
+const afterSale = () => ElMessage.info('申请售后功能开发中')
+
 onMounted(() => getOrderList())
 </script>
 
@@ -110,20 +122,20 @@ onMounted(() => getOrderList())
                 <p>在线支付</p>
               </div>
               <div class="column action">
-                <el-button v-if="order.orderState === 1" type="primary" size="small">
+                <el-button v-if="order.orderState === 1" type="primary" size="small" @click="goPay(order.id)">
                   立即付款
                 </el-button>
-                <el-button v-if="order.orderState === 3" type="primary" size="small">
+                <el-button v-if="order.orderState === 3" type="primary" size="small" @click="confirmReceipt">
                   确认收货
                 </el-button>
-                <p><a href="javascript:;">查看详情</a></p>
+                <p><a href="javascript:;" @click.prevent="goDetail(order.id)">查看详情</a></p>
                 <p v-if="[2, 3, 4, 5].includes(order.orderState)">
-                  <a href="javascript:;">再次购买</a>
+                  <a href="javascript:;" @click.prevent="buyAgain">再次购买</a>
                 </p>
                 <p v-if="[4, 5].includes(order.orderState)">
-                  <a href="javascript:;">申请售后</a>
+                  <a href="javascript:;" @click.prevent="afterSale">申请售后</a>
                 </p>
-                <p v-if="order.orderState === 1"><a href="javascript:;">取消订单</a></p>
+                <p v-if="order.orderState === 1"><a href="javascript:;" @click.prevent="cancelOrder">取消订单</a></p>
               </div>
             </div>
           </div>

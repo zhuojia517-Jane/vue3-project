@@ -1,6 +1,16 @@
 <script setup>
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import LayoutHeaderUl from './LayoutHeaderUl.vue'
 import HeaderCart from './HeaderCart.vue'
+
+const keyword = ref('')
+const goSearch = () => {
+  if (keyword.value.trim()) {
+    ElMessage.info('搜索功能开发中：' + keyword.value.trim())
+    keyword.value = ''
+  }
+}
 </script>
 
 <template>
@@ -13,7 +23,7 @@ import HeaderCart from './HeaderCart.vue'
       <LayoutHeaderUl />
       <div class="search">
         <i class="iconfont icon-search"></i>
-        <input type="text" placeholder="搜一搜">
+        <input type="text" placeholder="搜一搜" v-model="keyword" @keyup.enter="goSearch">
       </div>
       <!-- 头部购物车 -->
       <HeaderCart />

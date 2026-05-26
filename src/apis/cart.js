@@ -22,6 +22,20 @@ export function delCartListAPI(ids) {
         data: { ids }
     })
 }
+export function updateCartItemAPI({ skuId, selected, count }) {
+    return request({
+        url: `/member/cart/${skuId}`,
+        method: 'PUT',
+        data: { selected, count }
+    })
+}
+export function updateCartSelectAllAPI({ selected, ids }) {
+    return request({
+        url: '/member/cart/selected',
+        method: 'PUT',
+        data: { selected, ids }
+    })
+}
 export function mergeCartAPI(data) {
     return request({
         url: '/member/cart/merge',

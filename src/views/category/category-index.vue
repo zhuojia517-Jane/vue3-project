@@ -5,8 +5,8 @@ import { getSubCategoryAPI } from '@/apis/category'
 
 import GoodsItem from '../home/components/GoodsItems.vue'
 
-import { useCategory } from './composables/useCategory';
-import { useBanner } from './composables/useBanner.js'
+import { useCategory } from '@/composables/useCategory';
+import { useBanner } from '@/composables/useBanner.js'
 
 const { categoryData } = useCategory()
 const { bannerList } = useBanner()

@@ -12,19 +12,16 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   plugins: [
     vue(),
-    // ...
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
     Components({
       resolvers: [
-        // 1. 配置elementPlus采用sass样式配色系统
         ElementPlusResolver({ importStyle: "sass" }),
       ],
     }),
   ],
   resolve: {
-    // 实际的路径转换  @  -> src
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
@@ -32,11 +29,28 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // 2. 自动导入定制化样式文件进行样式覆盖
         additionalData: `
           @use "@/styles/element/index.scss" as *;
           @use "@/styles/var.scss" as *;
         `,
+      }
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/vue') ||
+              id.includes('node_modules/pinia') ||
+              id.includes('node_modules/vue-router')) {
+            return 'vendor-vue'
+          }
+          if (id.includes('node_modules/axios') ||
+              id.includes('node_modules/@vueuse') ||
+              id.includes('node_modules/dayjs')) {
+            return 'vendor-libs'
+          }
+        }
       }
     }
   }
