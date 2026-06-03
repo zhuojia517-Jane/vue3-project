@@ -24,9 +24,9 @@ export function delCartListAPI(ids) {
 }
 export function updateCartItemAPI({ skuId, selected, count }) {
     return request({
-        url: `/member/cart/${skuId}`,
+        url: '/member/cart',
         method: 'PUT',
-        data: { selected, count }
+        data: { skuId, selected, count }
     })
 }
 export function updateCartSelectAllAPI({ selected, ids }) {

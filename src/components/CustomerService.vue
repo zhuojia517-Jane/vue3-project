@@ -22,31 +22,32 @@ const messages = ref([
 const currentProductId = computed(() => (route.path.startsWith("/detail/") ? route.params.id : ""));
 const hasProductContext = computed(() => !!productInfo.value?.name);
 
-// 将当前商品整理成给模型看的结构化文本，方便客服基于详情页上下文回答。
+// 将当前商品细则整理成给模型看的结构化文本，方便客服基于详情页上下文回答。
 const productSummary = computed(() => {
   if (!productInfo.value) return "当前不在商品详情页，没有可用的商品上下文。";
 
   const product = productInfo.value;
+  // specs"规格名称: 规格值1、规格值2；"； 获取思路:product.specs如果是数组 则对每个规格项进行处理，拼接成 "规格名称: 规格值1、规格值2；" 的格式，如果不是数组则返回空字符串。
   const specs = Array.isArray(product.specs)
     ? product.specs
-        .map((item) => {
-          const values = Array.isArray(item.values)
-            ? item.values
-                .map((val) => val.name || "")
-                .filter(Boolean)
-                .join("、")
-            : "";
-          return values ? `${item.name}: ${values}` : item.name;
-        })
-        .filter(Boolean)
-        .join("；")
+      .map((item) => {
+        const values = Array.isArray(item.values)
+          ? item.values
+            .map((val) => val.name || "")
+            .filter(Boolean)
+            .join("、")
+          : "";
+        return values ? `${item.name}: ${values}` : item.name;
+      })
+      .filter(Boolean)
+      .join("；")
     : "";
-
+  //categories分类获取思路：product.categories如果是数组 则对每个分类项进行处理，获取分类名称，最后拼接成 "分类1 / 分类2 / 分类3" 的格式，如果不是数组则返回空字符串。
   const categories = Array.isArray(product.categories)
     ? product.categories
-        .map((item) => item.name)
-        .filter(Boolean)
-        .join(" / ")
+      .map((item) => item.name)
+      .filter(Boolean)
+      .join(" / ")
     : "";
 
   return [
@@ -64,6 +65,9 @@ const productSummary = computed(() => {
 });
 
 // 滚动到底部，保证新消息出现后始终可见。
+//nexttick的作用? nextTick 是 Vue.js 中的一个实用函数，用于在 DOM 更新完成后执行某些操作。当你修改了响应式数据时，Vue 会异步更新 DOM，这意味着在数据变化后
+// 立即访问 DOM 可能会得到旧的状态。使用 nextTick 可以确保你的代码在 DOM 更新完成后执行，从而获取到最新的 DOM 状态。
+// 在这个聊天组件中，scrollToBottom 函数使用 nextTick 来确保在新消息添加到消息列表后，聊天窗口能够正确滚动到底部，显示最新的消息。
 const scrollToBottom = async () => {
   await nextTick();
   const body = chatBodyRef.value;
@@ -71,6 +75,7 @@ const scrollToBottom = async () => {
   body.scrollTop = body.scrollHeight;
 };
 
+//通过id来获得商品详细信息
 const loadProductContext = async (id) => {
   if (!id) {
     productInfo.value = null;
@@ -97,6 +102,8 @@ const toggleChat = () => {
 
 // 组装 DeepSeek 对话消息：系统提示 + 最近历史 + 当前用户输入。
 const createRequestMessages = (userText) => {
+  //role content productSummary.value作用是什么? role是消息的角色，content是消息的内容，productSummary.value是当前商品的总结信息。
+  // 这个结构化的消息格式可以帮助模型更好地理解对话上下文，从而生成更准确和相关的回复。
   const baseMessages = [
     {
       role: "system",
@@ -113,7 +120,8 @@ const createRequestMessages = (userText) => {
       ].join("\n"),
     },
   ];
-
+  //历史记录获取思路: messages.value.slice(-8)获取最近8条消息，然后过滤出用户和助手的消息，最后映射成 { role, content } 的格式，供模型使用。
+  //最终返回basemessage和historymessage以及当前用户输入组成的消息数组，供模型生成回复时参考。
   const historyMessages = messages.value
     .slice(-8)
     .filter((item) => item.role === "user" || item.role === "assistant")
@@ -132,7 +140,7 @@ const createRequestMessages = (userText) => {
   ];
 };
 
-// 去掉模型回复里的 Markdown 符号，避免聊天框里直接显示 **、#、` 之类的标记。
+// 正则化去掉模型回复里的 Markdown 符号，避免聊天框里直接显示 **、#、` 之类的标记。
 const normalizeAssistantReply = (text) => {
   if (!text) return "";
 
@@ -249,15 +257,8 @@ onMounted(() => {
         </div>
 
         <div class="chat-footer">
-          <el-input
-            v-model="inputMessage"
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-            maxlength="500"
-            show-word-limit
-            placeholder="例如：帮我比较当前商品和 XX，或者告诉我这件商品适合什么人群"
-            @keydown.enter.exact.prevent="sendMessage"
-          />
+          <el-input v-model="inputMessage" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" maxlength="500"
+            show-word-limit placeholder="例如：帮我比较当前商品和 XX，或者告诉我这件商品适合什么人群" @keydown.enter.exact.prevent="sendMessage" />
           <div class="actions">
             <el-button @click="visible = false">收起</el-button>
             <el-button type="primary" :loading="isLoading" @click="sendMessage">发送</el-button>

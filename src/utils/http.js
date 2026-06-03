@@ -3,7 +3,7 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/stores/userStore";
 const httpInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost",
   timeout: 50000,
 });
 
