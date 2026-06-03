@@ -1,12 +1,12 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // elementPlus按需导入
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,15 +16,14 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
     Components({
-      resolvers: [
-        ElementPlusResolver({ importStyle: "sass" }),
-      ],
+      resolvers: [ElementPlusResolver({ importStyle: "sass" })],
+      dirs: ["src/components"],
     }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   css: {
     preprocessorOptions: {
@@ -33,25 +32,29 @@ export default defineConfig({
           @use "@/styles/element/index.scss" as *;
           @use "@/styles/var.scss" as *;
         `,
-      }
-    }
+      },
+    },
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/vue') ||
-              id.includes('node_modules/pinia') ||
-              id.includes('node_modules/vue-router')) {
-            return 'vendor-vue'
+          if (
+            id.includes("node_modules/vue") ||
+            id.includes("node_modules/pinia") ||
+            id.includes("node_modules/vue-router")
+          ) {
+            return "vendor-vue";
           }
-          if (id.includes('node_modules/axios') ||
-              id.includes('node_modules/@vueuse') ||
-              id.includes('node_modules/dayjs')) {
-            return 'vendor-libs'
+          if (
+            id.includes("node_modules/axios") ||
+            id.includes("node_modules/@vueuse") ||
+            id.includes("node_modules/dayjs")
+          ) {
+            return "vendor-libs";
           }
-        }
-      }
-    }
-  }
-})
+        },
+      },
+    },
+  },
+});
