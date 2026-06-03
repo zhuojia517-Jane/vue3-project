@@ -10,9 +10,9 @@
     "lint": "run-s lint:*",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:dev": "vitepress dev ",
+    "docs:build": "vitepress build ",
+    "docs:preview": "vitepress preview "
   },
   "dependencies": {
     "@vueuse/core": "^14.2.1",
